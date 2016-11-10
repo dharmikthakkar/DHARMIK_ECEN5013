@@ -174,16 +174,16 @@ int main(void)
 {
 	rxptr=rxdata;
 	rxmessageptr=rxmessage;
-	//while(1){
+	while(1){
 	//CI_MSG CI_MSG_STRUCT;
-	//irx=0;
-	//test_message=0;
-	//rx_complete=0;
-	//msb_part=0;
-	//lsb_part=0;
-	//temp_irx;
-	//rx_message_byte=0;
-	//rx_message_data=0;
+	irx=0;
+	test_message=0;
+	rx_complete=0;
+	msb_part=0;
+	lsb_part=0;
+	temp_irx;
+	rx_message_byte=0;
+	rx_message_data=0;
 
 	__disable_irq(); /* global disable IRQs */
 	UART0_init();
@@ -192,7 +192,7 @@ int main(void)
 
 	while(rx_complete==0);
 	Decode_CI_Msg(&CI_MSG_STRUCT);
-	//}
+	}
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
