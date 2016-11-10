@@ -57,7 +57,7 @@ private:
 
   SPI* spi;
   
-protected:
+public:
   /**
    * @name Low-level internal interface.
    *
