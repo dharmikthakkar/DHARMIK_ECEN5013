@@ -18,6 +18,8 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
     DEALINGS IN THE SOFTWARE.
 */
+#ifndef INCLUDES_SPI_H_
+#define INCLUDES_SPI_H_
 
 /* Memory Map */
 #define CONFIG      0x00
@@ -123,3 +125,12 @@
 
 #define W 1
 #define R 0
+
+void TIMER0_init();
+void delay();
+uint8_t *WriteToNrf(uint8_t ReadWrite, uint8_t reg, uint8_t *val, uint8_t antVal);
+void nrf_config();
+void nrf_set_tx_address();
+
+
+#endif
