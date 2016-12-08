@@ -19,10 +19,10 @@ unsigned int sleep_block_counter[5];
 #define accSDApin  6
 #define accSCLport gpioPortD
 #define accSCLpin  7
-#define LEDpin 2
+#define LEDpin2 3
 #define LEDport gpioPortE
-#define accintpin 6
-#define accintport gpioPortC
+#define accintpin 2
+#define accintport gpioPortD
 #define leuaert_baud 9600
 #define leuart_databits  leuartDatabits8
 #define leuartstopbits leuartStopbits1
@@ -44,7 +44,7 @@ int data,flag1,dat,date,dates;
 typedef enum address_t{
 	CTRL_REG1=0x2A,
 	CTRL_REG2=0x2B,
-	DEBOUNCE_CNT=0x18,
+	DEBOUNCE_CNT=0x1D,
 	TRANSIENT_THS=0x1F,
 	TRANSIENT_COUNT=0x20,
 	CTRL_REG4=0x2D,
