@@ -15,17 +15,14 @@
 #include "em_leuart.h"
 unsigned int sleep_block_counter[5];
 
-#define SDAport gpioPortD
-#define SDApin  6
-#define SCLport gpioPortD
-#define SCLpin  7
+#define accSDAport gpioPortD
+#define accSDApin  6
+#define accSCLport gpioPortD
+#define accSCLpin  7
 #define LEDpin 2
 #define LEDport gpioPortE
-#define intpin 6
-#define intport gpioPortC
-#define powerport gpioPortD
-#define powerpin 0
-#define LETIMER0_ENERGY_MODE EM2
+#define accintpin 6
+#define accintport gpioPortC
 #define leuaert_baud 9600
 #define leuart_databits  leuartDatabits8
 #define leuartstopbits leuartStopbits1
