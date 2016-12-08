@@ -59,9 +59,9 @@ void LEUART0_IRQHandler(void)
 
 void I2C0_setup(void)
 {
-	CMU_ClockEnable(cmuClock_HFPER,true);
+	/*CMU_ClockEnable(cmuClock_HFPER,true);
 	CMU_ClockEnable(cmuClock_CORELE,true);
-	CMU_ClockEnable(cmuClock_GPIO,true);
+	CMU_ClockEnable(cmuClock_GPIO,true);*/
 	CMU_ClockEnable(cmuClock_I2C0,true);
 	GPIO_PinModeSet(accSDAport,accSCLpin, gpioModeWiredAnd, 1);
 	GPIO_PinModeSet(accSDAport,accSDApin, gpioModeWiredAnd, 1);
@@ -161,21 +161,12 @@ void GPIOacc_setup()
 {
 
 	GPIO_PinModeSet(accintport, accintpin, gpioModeInput, 1);    //enable GPIO for pin and port for interrupts
-	GPIO_PinModeSet(LEDport, LEDpin, gpioModePushPull, 0);
+	//GPIO_PinModeSet(LEDport, LEDpin, gpioModePushPull, 0);
 
 	 NVIC_ClearPendingIRQ(GPIO_EVEN_IRQn);
 	 NVIC_EnableIRQ(GPIO_EVEN_IRQn);
 
 }
-void GPIO_EVEN_IRQHandler(void)
-{
-  /* clear flag for PC9 interrupt */
-  int flags8=GPIO->IF;
-  GPIO->IFC=flags8;
-  NVIC_EnableIRQ(LEUART0_IRQn);
-  dates= readacc(TRANSIENT_SRC);
-  GPIO_PinOutToggle(LEDport,LEDpin);
- }
 
 
 /**************************************************************************//**
