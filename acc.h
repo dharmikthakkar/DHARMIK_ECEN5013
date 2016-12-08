@@ -21,8 +21,8 @@ unsigned int sleep_block_counter[5];
 #define SCLpin  7
 #define LEDpin 2
 #define LEDport gpioPortE
-#define intpin 3
-#define intport gpioPortD
+#define intpin 6
+#define intport gpioPortC
 #define powerport gpioPortD
 #define powerpin 0
 #define LETIMER0_ENERGY_MODE EM2
@@ -56,9 +56,9 @@ typedef enum address_t{
 }address;
 void leuart0_setup(void);
 void I2C0_setup(void);
-void write(int address,int value);
-void GPIO2_setup();
-void work();
-int read(int address);
-void leuart0_setup(void);
+void writeacc(int address,int value);
+void GPIOacc_setup();
+void workacc();
+int readacc(int address);
+
 #endif
