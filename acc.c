@@ -14,49 +14,7 @@
  * terms of that agreement.
  *
  ******************************************************************************/
-#include <stdint.h>
-#include <stdbool.h>
-#include "em_device.h"
-#include "em_chip.h"
-#include "em_i2c.h"
-#include "em_cmu.h"
-#include "em_emu.h"
-#include "em_gpio.h"
-#include "em_timer.h"
-#include "em_int.h"
-#include "em_leuart.h"
-unsigned int sleep_block_counter[5];
-
-#define SDAport gpioPortD
-#define SDApin  6
-#define SCLport gpioPortD
-#define SCLpin  7
-#define LEDpin 2
-#define LEDport gpioPortE
-#define intpin 3
-#define intport gpioPortD
-#define powerport gpioPortD
-#define powerpin 0
-#define LETIMER0_ENERGY_MODE EM2
-#define leuaert_baud 9600
-#define leuart_databits  leuartDatabits8
-#define leuartstopbits leuartStopbits1
-#define LEUARTport gpioPortD
-#define LEUARTpin 4
-#define LEDSetCMD 65
-#define LEDResetCMD 66
-
-//#define slaveadd 0x39<<1
-#define writebit 0
-#define readbit  1
-int data,flag1,dat,date,dates;
-#define SA0 1
-#if SA0
-#define SLAVE_ADDRESS 0x1D<<1  // SA0 is high, 0x1C if low
-#else
-#define SLAVE_ADDRESS 0x1C<<1
-#endif
-
+#include "acc.h"
 
 void leuart0_setup(void)
 {
@@ -101,68 +59,6 @@ void LEUART0_IRQHandler(void)
     NVIC_DisableIRQ(LEUART0_IRQn);
 }
 
-void blockSleepMode(unsigned int sleepstate) //block sleep mode
-{
-	INT_Disable();
-	sleep_block_counter[sleepstate]++;
-	INT_Enable();
-}
-//disclaimer: I admit Ive taken this routine from simplicity studio
-void unblockSleepMode(unsigned int sleepstate) // unblock sleep mode
-{	INT_Disable();
-	if(sleep_block_counter[sleepstate]>0)
-	{
-	sleep_block_counter[sleepstate]--;
-	}
-	else
-		sleep_block_counter[sleepstate]=0;
-	INT_Enable();
-}
-void sleep(void) //sleep routine
-{
-	if(sleep_block_counter[0]>0)
-	{ return;
-	}
-	else if(sleep_block_counter[1]>0)
-	{ EMU_EnterEM1();
-	}
-	else if(sleep_block_counter[2]>0)
-	{ EMU_EnterEM2(true);
-	}
-	else if(sleep_block_counter[3]>0)
-	{ EMU_EnterEM3(true);
-	}
-	else
-	{EMU_EnterEM4();
-	}
-
-}
-void powerup(void)
-
-{
-		CMU_ClockEnable(cmuClock_TIMER0,true);
-        TIMER_Init_TypeDef timerInit0 =
-		  {
-		    .enable     = false,
-		    .debugRun   = false,
-		    .prescale   = timerPrescale1,
-		    .clkSel     = timerClkSelHFPerClk,
-		    .fallAction = timerInputActionNone,
-		    .riseAction = timerInputActionNone,
-		    .mode       = timerModeUp,
-		    .dmaClrAct  = false,
-		    .quadModeX4 = false,
-		    .oneShot    = true,
-		    .sync       = false,
-		  };
-		 TIMER_Init(TIMER0, &timerInit0);
-		 TIMER0->CNT=0x0000;
-		 TIMER_Enable(TIMER0,true);
-
-		 while(TIMER0->CNT <= 28000);
-
-		 TIMER_Enable(TIMER0,false);
-}
 
 void I2C0_setup(void)
 {
@@ -254,13 +150,21 @@ int read(int address)
 }
 void work()
 {
-	write(0x2A,0x18);
+	/*write(0x2A,0x18);
 	write(0x2B,0x18);
 	write(0x1D,0x12);
 	write(0x1F,0x0F);
 	write(0x20,0x05);
 	write(0x2D,0x20);
-	write(0x2E,0x20);
+	write(0x2E,0x20);*/
+	write(CTRL_REG1,0x18);
+		write(CTRL_REG2,0x18);
+		write(DEBOUNCE_CNT,0x12);
+		write(TRANSIENT_THS,0x0F);
+		write(TRANSIENT_COUNT,0x05);
+		write(CTRL_REG4,0x20);
+		write(CTRL_REG5,0x20);
+
 
 
 //	dat=read(0x1D);
@@ -298,7 +202,7 @@ void GPIO_ODD_IRQHandler(void)
   //if(date==0x20)
   //{
   NVIC_EnableIRQ(LEUART0_IRQn);
-  dates= read(0x1E);
+  dates= read(TRANSIENT_SRC);
 	 GPIO_PinOutToggle(LEDport,LEDpin);
   //}
  }
@@ -315,7 +219,7 @@ int main(void)
   //EMU_EnterEM3(true);
   I2C0_setup();
   GPIO2_setup();
-  powerup();
+  //powerup();
  leuart0_setup();
   work();
   EMU_EnterEM2(true);
